@@ -1,8 +1,8 @@
 -- 数据库初始化脚本
 -- 创建数据库
-CREATE DATABASE IF NOT EXISTS music_player CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS mydb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-USE music_player;
+USE mydb;
 
 -- 歌曲表
 CREATE TABLE IF NOT EXISTS song (

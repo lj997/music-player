@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicplayer.mapper.PlaylistMapper">
+    <resultMap id="PlaylistResultMap" type="com.musicplayer.entity.Playlist">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="cover_path" property="coverPath"/>
+        <result column="description" property="description"/>
+        <result column="song_count" property="songCount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="PlaylistResultMap">
+        SELECT * FROM playlist WHERE id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="PlaylistResultMap">
+        SELECT * FROM playlist ORDER BY create_time DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO playlist (name, cover_path, description, song_count)
+        VALUES (#{name}, #{coverPath}, #{description}, 0)
+    </insert>
+
+    <update id="update">
+        UPDATE playlist SET 
+            name = #{name},
+            cover_path = #{coverPath},
+            description = #{description}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateSongCount">
+        UPDATE playlist SET song_count = #{count} WHERE id = #{playlistId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM playlist WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicplayer.mapper.FavoriteMapper">
+    <resultMap id="FavoriteResultMap" type="com.musicplayer.entity.Favorite">
+        <id column="id" property="id"/>
+        <result column="song_id" property="songId"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="com.musicplayer.mapper.SongMapper.SongResultMap">
+        SELECT s.* FROM song s
+        INNER JOIN favorite f ON s.id = f.song_id
+        ORDER BY f.create_time DESC
+    </select>
+
+    <select id="exists" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM favorite WHERE song_id = #{songId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO favorite (song_id, create_time)
+        VALUES (#{songId}, NOW())
+    </insert>
+
+    <delete id="deleteBySongId">
+        DELETE FROM favorite WHERE song_id = #{songId}
+    </delete>
+</mapper>

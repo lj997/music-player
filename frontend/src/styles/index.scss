@@ -1,0 +1,146 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #fff;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.el-button {
+  border-radius: 20px;
+}
+
+.el-input__wrapper {
+  border-radius: 20px;
+}
+
+.el-dialog {
+  border-radius: 12px;
+}
+
+.el-dialog__header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.el-table {
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-row-hover-bg-color: rgba(255, 255, 255, 0.1);
+  --el-table-header-bg-color: rgba(255, 255, 255, 0.05);
+  --el-table-border-color: rgba(255, 255, 255, 0.1);
+  --el-table-text-color: rgba(255, 255, 255, 0.9);
+  --el-table-header-text-color: rgba(255, 255, 255, 0.7);
+}
+
+.el-table th.el-table__cell {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.el-table td.el-table__cell,
+.el-table th.el-table__cell {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.el-input__wrapper {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+.el-input__wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.el-input__wrapper.is-focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(100, 200, 255, 0.2);
+}
+
+.el-input__inner {
+  color: #fff;
+}
+
+.el-input__inner::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.el-message-box {
+  background-color: rgba(30, 30, 50, 0.95);
+  border: none;
+}
+
+.el-message-box__title {
+  color: #fff;
+}
+
+.el-message-box__content {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.el-pager li {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.el-pager li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.el-pager li.is-active {
+  background-color: #409eff;
+  color: #fff;
+}
+
+.btn-prev, .btn-next {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.btn-prev:hover, .btn-next:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.el-upload-dragger {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.el-upload-dragger:hover {
+  border-color: #409eff;
+}
+
+.el-upload-dragger .el-upload__text {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.el-loading-mask {
+  background-color: rgba(0, 0, 0, 0.5);
+}

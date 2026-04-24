@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.musicplayer.mapper.SongMapper">
+    <resultMap id="SongResultMap" type="com.musicplayer.entity.Song">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="artist" property="artist"/>
+        <result column="album" property="album"/>
+        <result column="file_path" property="filePath"/>
+        <result column="cover_path" property="coverPath"/>
+        <result column="duration" property="duration"/>
+        <result column="file_size" property="fileSize"/>
+        <result column="file_type" property="fileType"/>
+        <result column="artist_group" property="artistGroup"/>
+        <result column="album_group" property="albumGroup"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="SongResultMap">
+        SELECT * FROM song WHERE id = #{id}
+    </select>
+
+    <select id="selectByFilePath" resultMap="SongResultMap">
+        SELECT * FROM song WHERE file_path = #{filePath}
+    </select>
+
+    <select id="selectAll" resultMap="SongResultMap">
+        SELECT * FROM song ORDER BY artist, album, title
+    </select>
+
+    <select id="search" resultMap="SongResultMap">
+        SELECT * FROM song 
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
+           OR artist LIKE CONCAT('%', #{keyword}, '%')
+           OR album LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY artist, album, title
+    </select>
+
+    <select id="selectByArtist" resultMap="SongResultMap">
+        SELECT * FROM song WHERE artist = #{artist} ORDER BY album, title
+    </select>
+
+    <select id="selectByAlbum" resultMap="SongResultMap">
+        SELECT * FROM song WHERE album = #{album} ORDER BY title
+    </select>
+
+    <select id="selectAllArtists" resultType="java.lang.String">
+        SELECT DISTINCT artist FROM song WHERE artist IS NOT NULL ORDER BY artist
+    </select>
+
+    <select id="selectAllAlbums" resultType="java.lang.String">
+        SELECT DISTINCT album FROM song WHERE album IS NOT NULL ORDER BY album
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM song
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO song (title, artist, album, file_path, cover_path, duration, file_size, file_type, artist_group, album_group)
+        VALUES (#{title}, #{artist}, #{album}, #{filePath}, #{coverPath}, #{duration}, #{fileSize}, #{fileType}, #{artistGroup}, #{albumGroup})
+    </insert>
+
+    <update id="update">
+        UPDATE song SET 
+            title = #{title},
+            artist = #{artist},
+            album = #{album},
+            file_path = #{filePath},
+            cover_path = #{coverPath},
+            duration = #{duration},
+            file_size = #{fileSize},
+            file_type = #{fileType},
+            artist_group = #{artistGroup},
+            album_group = #{albumGroup}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM song WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByFilePath">
+        DELETE FROM song WHERE file_path = #{filePath}
+    </delete>
+</mapper>

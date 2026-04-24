@@ -21,6 +21,10 @@
         SELECT * FROM wallpaper ORDER BY is_current DESC, create_time DESC
     </select>
 
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM wallpaper
+    </select>
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO wallpaper (name, file_path, is_current)
         VALUES (#{name}, #{filePath}, #{isCurrent})

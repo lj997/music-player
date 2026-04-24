@@ -14,4 +14,5 @@ public interface WallpaperMapper {
     List<Wallpaper> selectAll();
     int updateCurrent(@Param("id") Long id);
     int resetCurrent();
+    int count();
 }

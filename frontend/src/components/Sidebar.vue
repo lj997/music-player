@@ -31,7 +31,7 @@
         </el-button>
       </router-link>
       <router-link to="/favorites" class="nav-item" active-class="active">
-        <el-icon><Heart /></el-icon>
+        <el-icon><StarFilled /></el-icon>
         <span>我的收藏</span>
       </router-link>
       <router-link to="/history" class="nav-item" active-class="active">
@@ -81,7 +81,7 @@ import {
   User,
   Picture,
   Collection,
-  Heart,
+  StarFilled,
   Clock,
   Setting,
   Plus

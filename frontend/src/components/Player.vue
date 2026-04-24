@@ -23,7 +23,7 @@
         @click.stop="toggleFavorite"
       >
         <el-icon :size="18">
-          <Heart :fill="isFavorite ? '#ff6b6b' : 'none'" :color="isFavorite ? '#ff6b6b' : 'inherit'" />
+          <StarFilled :fill="isFavorite ? '#ff6b6b' : 'none'" :color="isFavorite ? '#ff6b6b' : 'inherit'" />
         </el-icon>
       </el-button>
     </div>
@@ -38,15 +38,15 @@
           </el-tooltip>
         </el-button>
         <el-button type="text" class="control-btn" @click="playerStore.playPrev">
-          <el-icon :size="22"><ArrowLeftBold /></el-icon>
+          <el-icon :size="22"><ArrowLeft /></el-icon>
         </el-button>
         <el-button type="primary" class="play-btn" @click="playerStore.togglePlay">
           <el-icon :size="24">
-            <component :is="isPlaying ? 'Pause' : 'VideoPlay'" />
+            <component :is="isPlaying ? VideoPause : VideoPlay" />
           </el-icon>
         </el-button>
         <el-button type="text" class="control-btn" @click="playerStore.playNext">
-          <el-icon :size="22"><ArrowRightBold /></el-icon>
+          <el-icon :size="22"><ArrowRight /></el-icon>
         </el-button>
         <el-button type="text" class="control-btn">
           <el-tooltip content="播放列表" placement="top">
@@ -92,15 +92,15 @@ import { usePlayerStore } from '@/stores/player'
 import { useMainStore } from '@/stores/main'
 import { ElMessage } from 'element-plus'
 import {
-  Heart,
-  ArrowLeftBold,
-  ArrowRightBold,
-  Pause,
+  StarFilled,
+  ArrowLeft,
+  ArrowRight,
+  VideoPause,
   VideoPlay,
   List,
   Sort,
-  Share,
-  RefreshRight,
+  Connection,
+  Refresh,
   Volume,
   Mute
 } from '@element-plus/icons-vue'
@@ -133,8 +133,8 @@ const volumeValue = computed({
 const modeIcon = computed(() => {
   const mode = playerStore.playMode
   if (mode === 'sequence') return Sort
-  if (mode === 'random') return Share
-  return RefreshRight
+  if (mode === 'random') return Connection
+  return Refresh
 })
 
 const isFavorite = computed(() => {

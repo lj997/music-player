@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <div class="logo">
-      <el-icon :size="32"><Music /></el-icon>
+      <el-icon :size="32"><Collection /></el-icon>
       <span>音乐播放器</span>
     </div>
     
@@ -35,7 +35,7 @@
         <span>我的收藏</span>
       </router-link>
       <router-link to="/history" class="nav-item" active-class="active">
-        <el-icon><Clock /></el-icon>
+        <el-icon><Refresh /></el-icon>
         <span>最近播放</span>
       </router-link>
     </div>
@@ -76,13 +76,12 @@ import { useRouter } from 'vue-router'
 import { playlistApi } from '@/api'
 import { ElMessage } from 'element-plus'
 import {
-  Music,
   FolderOpened,
   User,
   Picture,
   Collection,
   StarFilled,
-  Clock,
+  Refresh,
   Setting,
   Plus
 } from '@element-plus/icons-vue'

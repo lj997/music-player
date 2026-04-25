@@ -1,125 +1,121 @@
 <template>
   <div class="library-page">
-    <Sidebar />
-    
-    <div class="main-content">
-      <div class="page-header">
-        <h1>音乐库</h1>
-        <div class="header-actions">
-          <el-input 
-            v-model="searchKeyword" 
-            placeholder="搜索歌曲、艺术家或专辑" 
-            style="width: 300px"
-            clearable
-            @clear="searchSongs"
-            @keyup.enter="searchSongs"
-          >
-            <template #prefix>
-              <el-icon><Search /></el-icon>
-            </template>
-          </el-input>
-          <el-button type="primary" @click="showScanDialog = true">
-            <el-icon><FolderAdd /></el-icon>
-            添加音乐文件夹
-          </el-button>
-        </div>
-      </div>
-      
-      <div class="view-tabs">
-        <el-radio-group v-model="viewMode" @change="loadSongs">
-          <el-radio-button value="all">全部歌曲</el-radio-button>
-          <el-radio-button value="artist">按艺术家</el-radio-button>
-          <el-radio-button value="album">按专辑</el-radio-button>
-        </el-radio-group>
-        
-        <el-button 
-          type="primary" 
-          :disabled="songs.length === 0"
-          @click="playAll"
+    <div class="page-header">
+      <h1>音乐库</h1>
+      <div class="header-actions">
+        <el-input 
+          v-model="searchKeyword" 
+          placeholder="搜索歌曲、艺术家或专辑" 
+          style="width: 300px"
+          clearable
+          @clear="searchSongs"
+          @keyup.enter="searchSongs"
         >
-          <el-icon><VideoPlay /></el-icon>
-          播放全部
+          <template #prefix>
+            <el-icon><Search /></el-icon>
+          </template>
+        </el-input>
+        <el-button type="primary" @click="showScanDialog = true">
+          <el-icon><FolderAdd /></el-icon>
+          添加音乐文件夹
         </el-button>
       </div>
+    </div>
+    
+    <div class="view-tabs">
+      <el-radio-group v-model="viewMode" @change="loadSongs">
+        <el-radio-button value="all">全部歌曲</el-radio-button>
+        <el-radio-button value="artist">按艺术家</el-radio-button>
+        <el-radio-button value="album">按专辑</el-radio-button>
+      </el-radio-group>
       
-      <div v-if="loading" class="loading-container">
-        <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
-        <p>加载中...</p>
+      <el-button 
+        type="primary" 
+        :disabled="songs.length === 0"
+        @click="playAll"
+      >
+        <el-icon><VideoPlay /></el-icon>
+        播放全部
+      </el-button>
+    </div>
+    
+    <div v-if="loading" class="loading-container">
+      <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
+      <p>加载中...</p>
+    </div>
+    
+    <template v-else>
+      <SongTable 
+        v-if="viewMode === 'all'"
+        :songs="songs"
+      />
+      
+      <div v-else-if="viewMode === 'artist'" class="group-view">
+        <div 
+          v-for="(groupSongs, artist) in groupedByArtist" 
+          :key="artist"
+          class="artist-group"
+        >
+          <div class="group-header" @click="toggleArtistGroup(artist)">
+            <el-icon class="expand-icon">
+              <component :is="expandedArtists.includes(artist) ? 'ArrowDown' : 'ArrowRight'" />
+            </el-icon>
+            <div class="group-cover">
+              <img 
+                v-if="groupSongs[0]?.coverPath"
+                :src="groupSongs[0].coverPath" 
+                :alt="artist"
+              />
+            </div>
+            <div class="group-info">
+              <h3>{{ artist }}</h3>
+              <p>{{ groupSongs.length }} 首歌曲</p>
+            </div>
+            <el-button type="primary" size="small" @click.stop="playGroup(groupSongs)">
+              播放全部
+            </el-button>
+          </div>
+          <div v-if="expandedArtists.includes(artist)" class="group-content">
+            <SongTable :songs="groupSongs" />
+          </div>
+        </div>
       </div>
       
-      <template v-else>
-        <SongTable 
-          v-if="viewMode === 'all'"
-          :songs="songs"
-        />
-        
-        <div v-else-if="viewMode === 'artist'" class="group-view">
-          <div 
-            v-for="(groupSongs, artist) in groupedByArtist" 
-            :key="artist"
-            class="artist-group"
-          >
-            <div class="group-header" @click="toggleArtistGroup(artist)">
-              <el-icon class="expand-icon">
-                <component :is="expandedArtists.includes(artist) ? 'ArrowDown' : 'ArrowRight'" />
-              </el-icon>
-              <div class="group-cover">
-                <img 
-                  v-if="groupSongs[0]?.coverPath"
-                  :src="groupSongs[0].coverPath" 
-                  :alt="artist"
-                />
-              </div>
-              <div class="group-info">
-                <h3>{{ artist }}</h3>
-                <p>{{ groupSongs.length }} 首歌曲</p>
-              </div>
-              <el-button type="primary" size="small" @click.stop="playGroup(groupSongs)">
-                播放全部
-              </el-button>
+      <div v-else-if="viewMode === 'album'" class="group-view">
+        <div 
+          v-for="(groupSongs, album) in groupedByAlbum" 
+          :key="album"
+          class="album-group"
+        >
+          <div class="group-header" @click="toggleAlbumGroup(album)">
+            <el-icon class="expand-icon">
+              <component :is="expandedAlbums.includes(album) ? 'ArrowDown' : 'ArrowRight'" />
+            </el-icon>
+            <div class="group-cover">
+              <img 
+                v-if="groupSongs[0]?.coverPath"
+                :src="groupSongs[0].coverPath" 
+                :alt="album"
+              />
             </div>
-            <div v-if="expandedArtists.includes(artist)" class="group-content">
-              <SongTable :songs="groupSongs" />
+            <div class="group-info">
+              <h3>{{ album }}</h3>
+              <p>{{ groupSongs[0]?.artist }} · {{ groupSongs.length }} 首歌曲</p>
             </div>
+            <el-button type="primary" size="small" @click.stop="playGroup(groupSongs)">
+              播放全部
+            </el-button>
+          </div>
+          <div v-if="expandedAlbums.includes(album)" class="group-content">
+            <SongTable :songs="groupSongs" />
           </div>
         </div>
-        
-        <div v-else-if="viewMode === 'album'" class="group-view">
-          <div 
-            v-for="(groupSongs, album) in groupedByAlbum" 
-            :key="album"
-            class="album-group"
-          >
-            <div class="group-header" @click="toggleAlbumGroup(album)">
-              <el-icon class="expand-icon">
-                <component :is="expandedAlbums.includes(album) ? 'ArrowDown' : 'ArrowRight'" />
-              </el-icon>
-              <div class="group-cover">
-                <img 
-                  v-if="groupSongs[0]?.coverPath"
-                  :src="groupSongs[0].coverPath" 
-                  :alt="album"
-                />
-              </div>
-              <div class="group-info">
-                <h3>{{ album }}</h3>
-                <p>{{ groupSongs[0]?.artist }} · {{ groupSongs.length }} 首歌曲</p>
-              </div>
-              <el-button type="primary" size="small" @click.stop="playGroup(groupSongs)">
-                播放全部
-              </el-button>
-            </div>
-            <div v-if="expandedAlbums.includes(album)" class="group-content">
-              <SongTable :songs="groupSongs" />
-            </div>
-          </div>
-        </div>
-        
-        <el-empty v-if="songs.length === 0 && viewMode === 'all'" description="暂无音乐，请先添加音乐文件夹">
-          <el-button type="primary" @click="showScanDialog = true">添加音乐文件夹</el-button>
-        </el-empty>
-      </template>
-    </div>
+      </div>
+      
+      <el-empty v-if="songs.length === 0 && viewMode === 'all'" description="暂无音乐，请先添加音乐文件夹">
+        <el-button type="primary" @click="showScanDialog = true">添加音乐文件夹</el-button>
+      </el-empty>
+    </template>
     
     <el-dialog v-model="showScanDialog" title="添加音乐文件夹" width="500px">
       <div class="folder-config">
@@ -166,7 +162,6 @@ import { usePlayerStore } from '@/stores/player'
 import { useMainStore } from '@/stores/main'
 import { folderApi, songApi } from '@/api'
 import { ElMessage } from 'element-plus'
-import Sidebar from '@/components/Sidebar.vue'
 import SongTable from '@/components/SongTable.vue'
 import {
   Search,
@@ -323,16 +318,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .library-page {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  margin-left: 240px;
   padding: 24px 32px;
-  width: calc(100% - 240px);
-  height: calc(100vh - 90px);
-  overflow-y: auto;
 }
 
 .page-header {

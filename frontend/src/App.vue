@@ -1,5 +1,6 @@
 <template>
   <div class="app-container" :style="wallpaperStyle">
+    <Sidebar />
     <div class="app-main">
       <router-view />
     </div>
@@ -12,6 +13,7 @@ import { computed, onMounted } from 'vue'
 import { usePlayerStore } from '@/stores/player'
 import { useWallpaperStore } from '@/stores/wallpaper'
 import Player from '@/components/Player.vue'
+import Sidebar from '@/components/Sidebar.vue'
 
 const playerStore = usePlayerStore()
 const wallpaperStore = useWallpaperStore()
@@ -37,14 +39,18 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .app-container {
-  min-height: 100vh;
+  height: 100%;
   width: 100%;
   position: relative;
+  display: flex;
 }
 
 .app-main {
+  margin-left: 240px;
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
   padding-bottom: 100px;
-  min-height: 100vh;
   box-sizing: border-box;
 }
 </style>

@@ -26,9 +26,6 @@ public class WallpaperController {
     @GetMapping("/current")
     public ResponseEntity<Wallpaper> getCurrentWallpaper() {
         Wallpaper current = wallpaperService.getCurrent();
-        if (current == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(current);
     }
 

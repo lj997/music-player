@@ -1,98 +1,94 @@
 <template>
   <div class="playlist-detail-page">
-    <Sidebar />
+    <div v-if="loading" class="loading-container">
+      <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
+      <p>加载中...</p>
+    </div>
     
-    <div class="main-content">
-      <div v-if="loading" class="loading-container">
-        <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
-        <p>加载中...</p>
+    <template v-else>
+      <div v-if="playlist" class="playlist-header">
+        <div class="playlist-cover">
+          <div class="cover-placeholder">
+            <el-icon :size="64"><Collection /></el-icon>
+          </div>
+        </div>
+        <div class="playlist-info">
+          <div class="playlist-type">歌单</div>
+          <h1 class="playlist-name">{{ playlist.name }}</h1>
+          <p class="playlist-desc">{{ playlist.description || '暂无描述' }}</p>
+          <div class="playlist-meta">
+            <span>{{ playlist.songCount || 0 }} 首歌曲</span>
+            <span>创建于 {{ formatDate(playlist.createTime) }}</span>
+          </div>
+          <div class="playlist-actions">
+            <el-button type="primary" size="large" @click="playAll">
+              <el-icon><VideoPlay /></el-icon>
+              播放全部
+            </el-button>
+            <el-button size="large" @click="showDeleteConfirm = true">
+              <el-icon><Delete /></el-icon>
+              删除歌单
+            </el-button>
+          </div>
+        </div>
       </div>
       
-      <template v-else>
-        <div v-if="playlist" class="playlist-header">
-          <div class="playlist-cover">
-            <div class="cover-placeholder">
-              <el-icon :size="64"><Collection /></el-icon>
+      <div class="song-list">
+        <div class="list-header">
+          <span style="width: 50px; text-align: center">#</span>
+          <span style="flex: 2; min-width: 200px">标题</span>
+          <span style="flex: 1; min-width: 120px">艺术家</span>
+          <span style="flex: 1.5; min-width: 150px">专辑</span>
+          <span style="width: 100px; text-align: center">时长</span>
+          <span style="width: 150px; text-align: center">操作</span>
+        </div>
+        
+        <div 
+          v-for="(song, index) in songs" 
+          :key="song.id"
+          class="song-item"
+          :class="{ 'playing': isCurrentSong(song.id) }"
+          @dblclick="playSong(song)"
+        >
+          <span class="song-index">{{ index + 1 }}</span>
+          <div class="song-title-cell">
+            <div class="song-cover-small">
+              <img 
+                :src="song.coverPath || '/default-cover.png'" 
+                :alt="song.title"
+              />
+            </div>
+            <div class="song-text">
+              <div class="title">{{ song.title }}</div>
             </div>
           </div>
-          <div class="playlist-info">
-            <div class="playlist-type">歌单</div>
-            <h1 class="playlist-name">{{ playlist.name }}</h1>
-            <p class="playlist-desc">{{ playlist.description || '暂无描述' }}</p>
-            <div class="playlist-meta">
-              <span>{{ playlist.songCount || 0 }} 首歌曲</span>
-              <span>创建于 {{ formatDate(playlist.createTime) }}</span>
-            </div>
-            <div class="playlist-actions">
-              <el-button type="primary" size="large" @click="playAll">
-                <el-icon><VideoPlay /></el-icon>
-                播放全部
-              </el-button>
-              <el-button size="large" @click="showDeleteConfirm = true">
-                <el-icon><Delete /></el-icon>
-                删除歌单
-              </el-button>
-            </div>
+          <span class="song-artist">{{ song.artist }}</span>
+          <span class="song-album">{{ song.album }}</span>
+          <span class="song-duration">{{ formatDuration(song.duration) }}</span>
+          <div class="song-actions">
+            <el-button type="text" size="small" @click="playSong(song)">播放</el-button>
+            <el-button 
+              type="text" 
+              size="small"
+              :class="{ 'is-favorite': isSongFavorite(song.id) }"
+              @click="toggleFavorite(song)"
+            >
+              {{ isSongFavorite(song.id) ? '已收藏' : '收藏' }}
+            </el-button>
+            <el-button 
+              type="text" 
+              size="small"
+              style="color: #f56c6c"
+              @click="removeSong(song)"
+            >
+              移除
+            </el-button>
           </div>
         </div>
         
-        <div class="song-list">
-          <div class="list-header">
-            <span style="width: 50px; text-align: center">#</span>
-            <span style="flex: 2; min-width: 200px">标题</span>
-            <span style="flex: 1; min-width: 120px">艺术家</span>
-            <span style="flex: 1.5; min-width: 150px">专辑</span>
-            <span style="width: 100px; text-align: center">时长</span>
-            <span style="width: 150px; text-align: center">操作</span>
-          </div>
-          
-          <div 
-            v-for="(song, index) in songs" 
-            :key="song.id"
-            class="song-item"
-            :class="{ 'playing': isCurrentSong(song.id) }"
-            @dblclick="playSong(song)"
-          >
-            <span class="song-index">{{ index + 1 }}</span>
-            <div class="song-title-cell">
-              <div class="song-cover-small">
-                <img 
-                  :src="song.coverPath || '/default-cover.png'" 
-                  :alt="song.title"
-                />
-              </div>
-              <div class="song-text">
-                <div class="title">{{ song.title }}</div>
-              </div>
-            </div>
-            <span class="song-artist">{{ song.artist }}</span>
-            <span class="song-album">{{ song.album }}</span>
-            <span class="song-duration">{{ formatDuration(song.duration) }}</span>
-            <div class="song-actions">
-              <el-button type="text" size="small" @click="playSong(song)">播放</el-button>
-              <el-button 
-                type="text" 
-                size="small"
-                :class="{ 'is-favorite': isSongFavorite(song.id) }"
-                @click="toggleFavorite(song)"
-              >
-                {{ isSongFavorite(song.id) ? '已收藏' : '收藏' }}
-              </el-button>
-              <el-button 
-                type="text" 
-                size="small"
-                style="color: #f56c6c"
-                @click="removeSong(song)"
-              >
-                移除
-              </el-button>
-            </div>
-          </div>
-          
-          <el-empty v-if="songs.length === 0" description="歌单中还没有歌曲" />
-        </div>
-      </template>
-    </div>
+        <el-empty v-if="songs.length === 0" description="歌单中还没有歌曲" />
+      </div>
+    </template>
     
     <el-dialog v-model="showDeleteConfirm" title="删除歌单" width="400px">
       <p>确定要删除歌单「{{ playlist?.name }}」吗？</p>
@@ -112,7 +108,6 @@ import { usePlayerStore } from '@/stores/player'
 import { useMainStore } from '@/stores/main'
 import { playlistApi } from '@/api'
 import { ElMessage } from 'element-plus'
-import Sidebar from '@/components/Sidebar.vue'
 import {
   Loading,
   Collection,
@@ -207,16 +202,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .playlist-detail-page {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  margin-left: 240px;
   padding: 24px 32px;
-  width: calc(100% - 240px);
-  height: calc(100vh - 90px);
-  overflow-y: auto;
 }
 
 .loading-container {

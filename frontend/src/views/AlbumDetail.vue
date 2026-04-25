@@ -1,41 +1,37 @@
 <template>
   <div class="album-detail-page">
-    <Sidebar />
+    <div v-if="loading" class="loading-container">
+      <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
+      <p>加载中...</p>
+    </div>
     
-    <div class="main-content">
-      <div v-if="loading" class="loading-container">
-        <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
-        <p>加载中...</p>
+    <template v-else>
+      <div class="album-header">
+        <div class="album-cover">
+          <div class="cover-placeholder">
+            <el-icon :size="64"><Picture /></el-icon>
+          </div>
+        </div>
+        <div class="album-info">
+          <div class="album-type">专辑</div>
+          <h1 class="album-name">{{ albumName }}</h1>
+          <p class="album-artist">{{ songs[0]?.artist || '未知艺术家' }}</p>
+          <p class="album-stats">{{ songs.length }} 首歌曲</p>
+          <div class="album-actions">
+            <el-button type="primary" size="large" @click="playAll">
+              <el-icon><VideoPlay /></el-icon>
+              播放全部
+            </el-button>
+          </div>
+        </div>
       </div>
       
-      <template v-else>
-        <div class="album-header">
-          <div class="album-cover">
-            <div class="cover-placeholder">
-              <el-icon :size="64"><Picture /></el-icon>
-            </div>
-          </div>
-          <div class="album-info">
-            <div class="album-type">专辑</div>
-            <h1 class="album-name">{{ albumName }}</h1>
-            <p class="album-artist">{{ songs[0]?.artist || '未知艺术家' }}</p>
-            <p class="album-stats">{{ songs.length }} 首歌曲</p>
-            <div class="album-actions">
-              <el-button type="primary" size="large" @click="playAll">
-                <el-icon><VideoPlay /></el-icon>
-                播放全部
-              </el-button>
-            </div>
-          </div>
-        </div>
-        
-        <div class="song-list">
-          <SongTable :songs="songs" />
-        </div>
-        
-        <el-empty v-if="songs.length === 0" description="该专辑暂无歌曲" />
-      </template>
-    </div>
+      <div class="song-list">
+        <SongTable :songs="songs" />
+      </div>
+      
+      <el-empty v-if="songs.length === 0" description="该专辑暂无歌曲" />
+    </template>
   </div>
 </template>
 
@@ -46,7 +42,6 @@ import { usePlayerStore } from '@/stores/player'
 import { useMainStore } from '@/stores/main'
 import { songApi } from '@/api'
 import { ElMessage } from 'element-plus'
-import Sidebar from '@/components/Sidebar.vue'
 import SongTable from '@/components/SongTable.vue'
 import { Loading, Picture, VideoPlay } from '@element-plus/icons-vue'
 
@@ -84,16 +79,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .album-detail-page {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  margin-left: 240px;
   padding: 24px 32px;
-  width: calc(100% - 240px);
-  height: calc(100vh - 90px);
-  overflow-y: auto;
 }
 
 .loading-container {

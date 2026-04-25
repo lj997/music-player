@@ -1,52 +1,48 @@
 <template>
   <div class="search-page">
-    <Sidebar />
-    
-    <div class="main-content">
-      <div class="search-header">
-        <el-input 
-          v-model="searchKeyword" 
-          placeholder="搜索歌曲、艺术家或专辑" 
-          size="large"
-          clearable
-          @clear="doSearch"
-          @keyup.enter="doSearch"
-        >
-          <template #prefix>
-            <el-icon :size="20"><Search /></el-icon>
-          </template>
-          <template #append>
-            <el-button type="primary" @click="doSearch">搜索</el-button>
-          </template>
-        </el-input>
-      </div>
-      
-      <div v-if="searchKeyword.trim() && !loading" class="search-results">
-        <template v-if="results.songs.length > 0">
-          <div class="result-section">
-            <div class="section-title">
-              歌曲
-              <span class="result-count">({{ results.songs.length }})</span>
-            </div>
-            <SongTable :songs="results.songs" />
-          </div>
+    <div class="search-header">
+      <el-input 
+        v-model="searchKeyword" 
+        placeholder="搜索歌曲、艺术家或专辑" 
+        size="large"
+        clearable
+        @clear="doSearch"
+        @keyup.enter="doSearch"
+      >
+        <template #prefix>
+          <el-icon :size="20"><Search /></el-icon>
         </template>
-        
-        <div v-else-if="hasSearched" class="no-results">
-          <el-empty description="没有找到相关歌曲" />
+        <template #append>
+          <el-button type="primary" @click="doSearch">搜索</el-button>
+        </template>
+      </el-input>
+    </div>
+    
+    <div v-if="searchKeyword.trim() && !loading" class="search-results">
+      <template v-if="results.songs.length > 0">
+        <div class="result-section">
+          <div class="section-title">
+            歌曲
+            <span class="result-count">({{ results.songs.length }})</span>
+          </div>
+          <SongTable :songs="results.songs" />
         </div>
-      </div>
+      </template>
       
-      <div v-else-if="loading" class="loading-container">
-        <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
-        <p>搜索中...</p>
+      <div v-else-if="hasSearched" class="no-results">
+        <el-empty description="没有找到相关歌曲" />
       </div>
-      
-      <div v-else class="search-hint">
-        <el-icon :size="64" style="color: rgba(255, 255, 255, 0.3); margin-bottom: 20px"><Search /></el-icon>
-        <h2>搜索音乐</h2>
-        <p>输入歌曲名称、艺术家或专辑名称进行搜索</p>
-      </div>
+    </div>
+    
+    <div v-else-if="loading" class="loading-container">
+      <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
+      <p>搜索中...</p>
+    </div>
+    
+    <div v-else class="search-hint">
+      <el-icon :size="64" style="color: rgba(255, 255, 255, 0.3); margin-bottom: 20px"><Search /></el-icon>
+      <h2>搜索音乐</h2>
+      <p>输入歌曲名称、艺术家或专辑名称进行搜索</p>
     </div>
   </div>
 </template>
@@ -56,7 +52,6 @@ import { ref, reactive, onMounted } from 'vue'
 import { useMainStore } from '@/stores/main'
 import { songApi } from '@/api'
 import { ElMessage } from 'element-plus'
-import Sidebar from '@/components/Sidebar.vue'
 import SongTable from '@/components/SongTable.vue'
 import { Search, Loading } from '@element-plus/icons-vue'
 
@@ -99,16 +94,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .search-page {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  margin-left: 240px;
   padding: 24px 32px;
-  width: calc(100% - 240px);
-  height: calc(100vh - 90px);
-  overflow-y: auto;
 }
 
 .search-header {

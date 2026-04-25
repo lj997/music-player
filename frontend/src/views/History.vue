@@ -1,34 +1,30 @@
 <template>
   <div class="history-page">
-    <Sidebar />
-    
-    <div class="main-content">
-      <div class="page-header">
-        <h1>最近播放</h1>
-        <el-button 
-          type="primary" 
-          :disabled="history.length === 0"
-          @click="playAll"
-        >
-          <el-icon><VideoPlay /></el-icon>
-          播放全部
-        </el-button>
-      </div>
-      
-      <div v-if="loading" class="loading-container">
-        <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
-        <p>加载中...</p>
-      </div>
-      
-      <template v-else>
-        <SongTable 
-          v-if="history.length > 0"
-          :songs="history"
-        />
-        
-        <el-empty v-else description="暂无播放记录，快去听歌吧" />
-      </template>
+    <div class="page-header">
+      <h1>最近播放</h1>
+      <el-button 
+        type="primary" 
+        :disabled="history.length === 0"
+        @click="playAll"
+      >
+        <el-icon><VideoPlay /></el-icon>
+        播放全部
+      </el-button>
     </div>
+    
+    <div v-if="loading" class="loading-container">
+      <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
+      <p>加载中...</p>
+    </div>
+    
+    <template v-else>
+      <SongTable 
+        v-if="history.length > 0"
+        :songs="history"
+      />
+      
+      <el-empty v-else description="暂无播放记录，快去听歌吧" />
+    </template>
   </div>
 </template>
 
@@ -38,7 +34,6 @@ import { usePlayerStore } from '@/stores/player'
 import { useMainStore } from '@/stores/main'
 import { historyApi } from '@/api'
 import { ElMessage } from 'element-plus'
-import Sidebar from '@/components/Sidebar.vue'
 import SongTable from '@/components/SongTable.vue'
 import { VideoPlay, Loading } from '@element-plus/icons-vue'
 
@@ -74,16 +69,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .history-page {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  margin-left: 240px;
   padding: 24px 32px;
-  width: calc(100% - 240px);
-  height: calc(100vh - 90px);
-  overflow-y: auto;
 }
 
 .page-header {

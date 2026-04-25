@@ -1,40 +1,36 @@
 <template>
   <div class="artist-detail-page">
-    <Sidebar />
+    <div v-if="loading" class="loading-container">
+      <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
+      <p>加载中...</p>
+    </div>
     
-    <div class="main-content">
-      <div v-if="loading" class="loading-container">
-        <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
-        <p>加载中...</p>
+    <template v-else>
+      <div class="artist-header">
+        <div class="artist-cover">
+          <div class="cover-placeholder">
+            <el-icon :size="64"><User /></el-icon>
+          </div>
+        </div>
+        <div class="artist-info">
+          <div class="artist-type">艺术家</div>
+          <h1 class="artist-name">{{ artistName }}</h1>
+          <p class="artist-stats">{{ songs.length }} 首歌曲</p>
+          <div class="artist-actions">
+            <el-button type="primary" size="large" @click="playAll">
+              <el-icon><VideoPlay /></el-icon>
+              播放全部
+            </el-button>
+          </div>
+        </div>
       </div>
       
-      <template v-else>
-        <div class="artist-header">
-          <div class="artist-cover">
-            <div class="cover-placeholder">
-              <el-icon :size="64"><User /></el-icon>
-            </div>
-          </div>
-          <div class="artist-info">
-            <div class="artist-type">艺术家</div>
-            <h1 class="artist-name">{{ artistName }}</h1>
-            <p class="artist-stats">{{ songs.length }} 首歌曲</p>
-            <div class="artist-actions">
-              <el-button type="primary" size="large" @click="playAll">
-                <el-icon><VideoPlay /></el-icon>
-                播放全部
-              </el-button>
-            </div>
-          </div>
-        </div>
-        
-        <div class="song-list">
-          <SongTable :songs="songs" />
-        </div>
-        
-        <el-empty v-if="songs.length === 0" description="该艺术家暂无歌曲" />
-      </template>
-    </div>
+      <div class="song-list">
+        <SongTable :songs="songs" />
+      </div>
+      
+      <el-empty v-if="songs.length === 0" description="该艺术家暂无歌曲" />
+    </template>
   </div>
 </template>
 
@@ -45,7 +41,6 @@ import { usePlayerStore } from '@/stores/player'
 import { useMainStore } from '@/stores/main'
 import { songApi } from '@/api'
 import { ElMessage } from 'element-plus'
-import Sidebar from '@/components/Sidebar.vue'
 import SongTable from '@/components/SongTable.vue'
 import { Loading, User, VideoPlay } from '@element-plus/icons-vue'
 
@@ -83,16 +78,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .artist-detail-page {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  margin-left: 240px;
   padding: 24px 32px;
-  width: calc(100% - 240px);
-  height: calc(100vh - 90px);
-  overflow-y: auto;
 }
 
 .loading-container {

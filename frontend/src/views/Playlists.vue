@@ -1,63 +1,59 @@
 <template>
   <div class="playlists-page">
-    <Sidebar />
-    
-    <div class="main-content">
-      <div class="page-header">
-        <h1>我的歌单</h1>
-        <el-button type="primary" @click="showCreateDialog = true">
-          <el-icon><Plus /></el-icon>
-          创建歌单
-        </el-button>
-      </div>
-      
-      <div v-if="loading" class="loading-container">
-        <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
-        <p>加载中...</p>
-      </div>
-      
-      <template v-else>
-        <div v-if="playlists.length > 0" class="playlist-grid">
-          <div 
-            v-for="playlist in playlists" 
-            :key="playlist.id"
-            class="playlist-card"
-            @click="goToPlaylist(playlist)"
-          >
-            <div class="playlist-cover">
-              <div class="cover-placeholder">
-                <el-icon :size="48"><Collection /></el-icon>
-              </div>
-              <div class="cover-overlay">
-                <el-button type="primary" circle @click.stop="playPlaylist(playlist)">
-                  <el-icon><VideoPlay /></el-icon>
-                </el-button>
-              </div>
-            </div>
-            <div class="playlist-info">
-              <h3 class="playlist-name">{{ playlist.name }}</h3>
-              <p class="playlist-desc">{{ playlist.description || '暂无描述' }}</p>
-              <p class="playlist-count">{{ playlist.songCount || 0 }} 首歌曲</p>
-            </div>
-            <el-dropdown trigger="click" @command="(cmd) => handleCommand(cmd, playlist)" placement="bottom-end">
-              <el-button type="text" class="more-btn">
-                <el-icon><MoreFilled /></el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item command="play">播放</el-dropdown-item>
-                  <el-dropdown-item command="delete" divided style="color: #f56c6c">删除歌单</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </div>
-        </div>
-        
-        <el-empty v-else description="暂无歌单，快来创建一个吧">
-          <el-button type="primary" @click="showCreateDialog = true">创建歌单</el-button>
-        </el-empty>
-      </template>
+    <div class="page-header">
+      <h1>我的歌单</h1>
+      <el-button type="primary" @click="showCreateDialog = true">
+        <el-icon><Plus /></el-icon>
+        创建歌单
+      </el-button>
     </div>
+    
+    <div v-if="loading" class="loading-container">
+      <el-icon class="loading-icon" :size="48"><Loading /></el-icon>
+      <p>加载中...</p>
+    </div>
+    
+    <template v-else>
+      <div v-if="playlists.length > 0" class="playlist-grid">
+        <div 
+          v-for="playlist in playlists" 
+          :key="playlist.id"
+          class="playlist-card"
+          @click="goToPlaylist(playlist)"
+        >
+          <div class="playlist-cover">
+            <div class="cover-placeholder">
+              <el-icon :size="48"><Collection /></el-icon>
+            </div>
+            <div class="cover-overlay">
+              <el-button type="primary" circle @click.stop="playPlaylist(playlist)">
+                <el-icon><VideoPlay /></el-icon>
+              </el-button>
+            </div>
+          </div>
+          <div class="playlist-info">
+            <h3 class="playlist-name">{{ playlist.name }}</h3>
+            <p class="playlist-desc">{{ playlist.description || '暂无描述' }}</p>
+            <p class="playlist-count">{{ playlist.songCount || 0 }} 首歌曲</p>
+          </div>
+          <el-dropdown trigger="click" @command="(cmd) => handleCommand(cmd, playlist)" placement="bottom-end">
+            <el-button type="text" class="more-btn">
+              <el-icon><MoreFilled /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="play">播放</el-dropdown-item>
+                <el-dropdown-item command="delete" divided style="color: #f56c6c">删除歌单</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+      </div>
+      
+      <el-empty v-else description="暂无歌单，快来创建一个吧">
+        <el-button type="primary" @click="showCreateDialog = true">创建歌单</el-button>
+      </el-empty>
+    </template>
     
     <el-dialog v-model="showCreateDialog" title="创建歌单" width="450px">
       <el-form :model="newPlaylist" label-width="80px">
@@ -96,7 +92,6 @@ import { useRouter } from 'vue-router'
 import { usePlayerStore } from '@/stores/player'
 import { playlistApi } from '@/api'
 import { ElMessage } from 'element-plus'
-import Sidebar from '@/components/Sidebar.vue'
 import {
   Plus,
   Loading,
@@ -194,16 +189,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .playlists-page {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  margin-left: 240px;
   padding: 24px 32px;
-  width: calc(100% - 240px);
-  height: calc(100vh - 90px);
-  overflow-y: auto;
 }
 
 .page-header {

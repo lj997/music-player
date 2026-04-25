@@ -1,114 +1,110 @@
 <template>
   <div class="settings-page">
-    <Sidebar />
+    <div class="page-header">
+      <h1>设置</h1>
+    </div>
     
-    <div class="main-content">
-      <div class="page-header">
-        <h1>设置</h1>
-      </div>
-      
-      <div class="settings-section">
-        <div class="section-title">音乐文件夹</div>
-        <div class="section-content">
-          <div class="folder-list">
-            <div v-for="folder in folders" :key="folder.id" class="folder-item">
-              <span class="folder-path">{{ folder.folderPath }}</span>
-              <div class="folder-actions">
-                <el-button type="text" size="small" @click="scanFolder(folder)">
-                  <el-icon><Refresh /></el-icon>
-                  扫描
-                </el-button>
-                <el-button 
-                  type="text" 
-                  size="small" 
-                  style="color: #f56c6c"
-                  @click="deleteFolder(folder)"
-                >
-                  <el-icon><Delete /></el-icon>
-                  删除
-                </el-button>
-              </div>
-            </div>
-          </div>
-          
-          <div class="add-folder">
-            <el-input 
-              v-model="newFolderPath" 
-              placeholder="请输入文件夹绝对路径"
-              style="width: 400px"
-            />
-            <el-button type="primary" @click="addFolder">
-              <el-icon><Plus /></el-icon>
-              添加文件夹
-            </el-button>
-          </div>
-          
-          <div class="scan-all">
-            <el-button type="primary" :loading="scanning" @click="scanAll">
-              <el-icon><Refresh /></el-icon>
-              扫描全部文件夹
-            </el-button>
-            <span class="scan-hint">扫描会更新音乐库中的歌曲信息</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="settings-section">
-        <div class="section-title">主题壁纸</div>
-        <div class="section-content">
-          <div class="wallpaper-grid">
-            <div 
-              v-for="wallpaper in wallpapers" 
-              :key="wallpaper.id"
-              class="wallpaper-item"
-              :class="{ 'current': wallpaper.isCurrent }"
-              @click="setCurrentWallpaper(wallpaper)"
-            >
-              <img :src="wallpaper.filePath" :alt="wallpaper.name" />
-              <div class="wallpaper-info">
-                <span>{{ wallpaper.name }}</span>
-                <el-tag v-if="wallpaper.isCurrent" type="primary" size="small">当前</el-tag>
-              </div>
+    <div class="settings-section">
+      <div class="section-title">音乐文件夹</div>
+      <div class="section-content">
+        <div class="folder-list">
+          <div v-for="folder in folders" :key="folder.id" class="folder-item">
+            <span class="folder-path">{{ folder.folderPath }}</span>
+            <div class="folder-actions">
+              <el-button type="text" size="small" @click="scanFolder(folder)">
+                <el-icon><Refresh /></el-icon>
+                扫描
+              </el-button>
               <el-button 
-                type="danger" 
+                type="text" 
                 size="small" 
-                circle
-                class="delete-btn"
-                @click.stop="deleteWallpaper(wallpaper)"
+                style="color: #f56c6c"
+                @click="deleteFolder(folder)"
               >
-                <el-icon><Close /></el-icon>
+                <el-icon><Delete /></el-icon>
+                删除
               </el-button>
             </div>
-            
-            <div class="wallpaper-upload" @click="triggerUpload">
-              <el-icon :size="48"><Plus /></el-icon>
-              <span>上传壁纸</span>
-              <input 
-                ref="fileInput" 
-                type="file" 
-                accept="image/*" 
-                style="display: none"
-                @change="handleFileChange"
-              />
+          </div>
+        </div>
+        
+        <div class="add-folder">
+          <el-input 
+            v-model="newFolderPath" 
+            placeholder="请输入文件夹绝对路径"
+            style="width: 400px"
+          />
+          <el-button type="primary" @click="addFolder">
+            <el-icon><Plus /></el-icon>
+            添加文件夹
+          </el-button>
+        </div>
+        
+        <div class="scan-all">
+          <el-button type="primary" :loading="scanning" @click="scanAll">
+            <el-icon><Refresh /></el-icon>
+            扫描全部文件夹
+          </el-button>
+          <span class="scan-hint">扫描会更新音乐库中的歌曲信息</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="settings-section">
+      <div class="section-title">主题壁纸</div>
+      <div class="section-content">
+        <div class="wallpaper-grid">
+          <div 
+            v-for="wallpaper in wallpapers" 
+            :key="wallpaper.id"
+            class="wallpaper-item"
+            :class="{ 'current': wallpaper.isCurrent }"
+            @click="setCurrentWallpaper(wallpaper)"
+          >
+            <img :src="wallpaper.filePath" :alt="wallpaper.name" />
+            <div class="wallpaper-info">
+              <span>{{ wallpaper.name }}</span>
+              <el-tag v-if="wallpaper.isCurrent" type="primary" size="small">当前</el-tag>
             </div>
+            <el-button 
+              type="danger" 
+              size="small" 
+              circle
+              class="delete-btn"
+              @click.stop="deleteWallpaper(wallpaper)"
+            >
+              <el-icon><Close /></el-icon>
+            </el-button>
+          </div>
+          
+          <div class="wallpaper-upload" @click="triggerUpload">
+            <el-icon :size="48"><Plus /></el-icon>
+            <span>上传壁纸</span>
+            <input 
+              ref="fileInput" 
+              type="file" 
+              accept="image/*" 
+              style="display: none"
+              @change="handleFileChange"
+            />
           </div>
         </div>
       </div>
-      
-      <div class="settings-section">
-        <div class="section-title">播放设置</div>
-        <div class="section-content">
-          <div class="setting-item">
-            <div class="setting-info">
-              <div class="setting-name">默认播放模式</div>
-              <div class="setting-desc">选择播放器的默认播放模式</div>
-            </div>
-            <el-select v-model="playMode" style="width: 140px" @change="handleModeChange">
-              <el-option label="顺序播放" value="sequence" />
-              <el-option label="随机播放" value="random" />
-              <el-option label="单曲循环" value="loop" />
-            </el-select>
+    </div>
+    
+    <div class="settings-section">
+      <div class="section-title">播放设置</div>
+      <div class="section-content">
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">默认播放模式</div>
+            <div class="setting-desc">选择播放器的默认播放模式</div>
           </div>
+          <el-select v-model="playMode" style="width: 140px" @change="handleModeChange">
+            <el-option label="顺序播放" value="sequence" />
+            <el-option label="随机播放" value="random" />
+            <el-option label="单曲循环" value="loop" />
+          </el-select>
         </div>
       </div>
     </div>
@@ -122,7 +118,6 @@ import { useWallpaperStore } from '@/stores/wallpaper'
 import { useMainStore } from '@/stores/main'
 import { folderApi } from '@/api'
 import { ElMessage } from 'element-plus'
-import Sidebar from '@/components/Sidebar.vue'
 import {
   Refresh,
   Delete,
@@ -270,16 +265,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .settings-page {
-  display: flex;
-  min-height: 100vh;
-}
-
-.main-content {
-  margin-left: 240px;
   padding: 24px 32px;
-  width: calc(100% - 240px);
-  height: calc(100vh - 90px);
-  overflow-y: auto;
 }
 
 .page-header {

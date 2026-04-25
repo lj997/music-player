@@ -77,11 +77,6 @@
         :show-tooltip="false"
         @change="handleVolumeChange"
       />
-      <el-button type="text" class="control-btn" @click="toggleMute">
-        <el-icon :size="20">
-          <component :is="volumeValue > 0 ? 'Volume' : 'Mute'" />
-        </el-icon>
-      </el-button>
     </div>
   </div>
 </template>
@@ -98,11 +93,9 @@ import {
   VideoPause,
   VideoPlay,
   List,
-  Sort,
-  Connection,
-  Refresh,
-  Volume,
-  Mute
+  Rank,
+  DataLine,
+  Refresh
 } from '@element-plus/icons-vue'
 
 const playerStore = usePlayerStore()
@@ -132,8 +125,8 @@ const volumeValue = computed({
 
 const modeIcon = computed(() => {
   const mode = playerStore.playMode
-  if (mode === 'sequence') return Sort
-  if (mode === 'random') return Connection
+  if (mode === 'sequence') return Rank
+  if (mode === 'random') return DataLine
   return Refresh
 })
 
@@ -155,14 +148,6 @@ function handleProgressChange(val) {
 
 function handleVolumeChange(val) {
   playerStore.setVolume(val / 100)
-}
-
-function toggleMute() {
-  if (volumeValue.value > 0) {
-    playerStore.setVolume(0)
-  } else {
-    playerStore.setVolume(0.8)
-  }
 }
 
 async function toggleFavorite() {
